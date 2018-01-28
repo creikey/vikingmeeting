@@ -1,3 +1,6 @@
+# Log files from server
+log.txt
+
 # Binaries for programs and plugins
 vikingmeeting
 *.exe
