@@ -1,9 +1,12 @@
 package main
 
 import (
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"time"
 )
 
 const (
@@ -51,6 +54,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	os.Remove(LOGFILE)
+	f, err := os.OpenFile(LOGFILE, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	output := io.MultiWriter(os.Stderr, f)
+	output.Write([]byte("-- Log for " + time.Now().String() + " --\n"))
+	log.SetOutput(output)
 	log.Println("Starting server")
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/index.html", mainHandler)
